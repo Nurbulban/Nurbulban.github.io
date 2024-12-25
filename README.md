@@ -1,1 +1,0 @@
-# Nurbulban.github.io
