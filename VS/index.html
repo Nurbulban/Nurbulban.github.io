@@ -1,0 +1,194 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Valentine Request</title>
+  <link rel="icon" type="image/jpeg" href="assets/heart-CGYnWwiV.jpg">
+  <style>
+    /* Сброс базовых отступов и установка box-sizing */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #ff758c, #ff7eb3);
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      overflow: hidden; /* Убираем прокрутку */
+    }
+    
+    /* Контейнер начального экрана */
+    #initial {
+      position: relative;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+      z-index: 2;
+      transition: transform 0.3s ease;
+      backdrop-filter: blur(10px); /* Эффект размытия фона */
+      background: linear-gradient(135deg, #ff7eb3, #ff58a0); /* Розовый градиент */
+    }
+    
+     #initial h2 {
+      font-size: 2.5rem;
+     color: #ffe0e6; /* Нежный розовато-белый */
+     text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
+     margin-bottom: 20px;
+}
+
+    
+    .buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    .yes-button, .no-button {
+      font-size: 1.2rem;
+      padding: 12px 25px;
+      border: none;
+      cursor: pointer;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s ease;
+      min-width: 100px;
+    }
+    
+    .yes-button {
+      background-color: #4CAF50;
+      color: white;
+    }
+    
+    .no-button {
+      background-color: #FF4C4C;
+      color: white;
+    }
+    
+    /* Эффект при наведении на кнопки */
+    .yes-button:hover, .no-button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+    }
+    
+    /* Стиль для полноэкранной кнопки Yes (после 3-х нажатий на кнопку No) */
+    .yes-button.fullscreen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      font-size: 3rem;
+      border-radius: 0;
+      background: linear-gradient(135deg, #28a745, #6abf69);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 3;
+      color: white; /* Цвет текста */
+      border: none; /* Убираем границу */
+      padding: 0; /* Убираем внутренние отступы */
+    }
+    
+    /* Контейнер с сообщением – всегда в DOM, но изначально скрыт */
+    .love-message {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 1s ease-in-out;
+      z-index: 1;
+      width: 90%;
+      max-width: 500px;
+      backdrop-filter: blur(10px); /* Эффект размытия фона */
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    }
+    
+    .love-message.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    
+    .love-message h2 {
+      font-size: 3rem; /* Увеличенный размер шрифта */
+      color: #ff6b81; /* Цвет текста */
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Тень для текста */
+      text-align: center; /* Выравнивание текста по центру */
+    }
+    
+    .love-message img {
+      max-width: 100%;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    }
+    
+    /* Media queries для мобильных устройств */
+    @media (max-width: 600px) {
+      #initial h2 {
+        font-size: 2rem;
+      }
+      .yes-button, .no-button {
+        font-size: 1rem;
+        padding: 10px 20px;
+      }
+      .love-message h2 {
+        font-size: 2rem; /* Уменьшенный размер шрифта для мобильных */
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Начальный экран -->
+  <div id="initial">
+    <h2>Will you be my <i>Valentine?</i></h2>
+    <div class="buttons">
+      <button class="yes-button" id="yes">Yes!</button>
+      <button class="no-button" id="no">No no no</button>
+    </div>
+  </div>
+  
+  <!-- Сообщение с гифкой -->
+  <div class="love-message" id="love-message">
+    <h2>I love you ♥</h2>
+    <img src="assets/cutest-white-cat.gif" alt="Valentine Cat">
+  </div>
+  
+  <script>
+    let clickCount = 0;
+    const yesButton = document.getElementById("yes");
+    const noButton = document.getElementById("no");
+    const initialScreen = document.getElementById("initial");
+    const loveMessage = document.getElementById("love-message");
+    
+    noButton.addEventListener("click", function() {
+      clickCount++;
+      if (clickCount < 3) {
+        yesButton.style.transform = "scale(1.1)";
+        setTimeout(() => {
+          yesButton.style.transform = "scale(1)";
+        }, 200);
+      } else {
+        yesButton.classList.add("fullscreen");
+        noButton.style.display = "none";
+      }
+    });
+    
+    yesButton.addEventListener("click", function() {
+      initialScreen.style.display = "none";
+      loveMessage.classList.add("show");
+    });
+  </script>
+</body>
+</html>
